@@ -1,5 +1,9 @@
+const { SlashCommandBuilder } = require("discord.js")
+
 module.exports = {
-    name: "server",
+    data: new SlashCommandBuilder()
+        .setName('server')
+        .setDescription('Gets information about the server!'),
     cooldown: 60,
     description: "IN DEVELOPMENT",
     execute(message, args) {

@@ -1,79 +1,67 @@
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const Discord = require('discord.js');
-//change to dm message soon so ppl cant pls snipe and get the other person's choice
-// - update, rps start from dm, then ask opponent in chat,
-// also upcoming projects, tictactoe and chopsticks, punch and defend games
+
+const choices = ["rock", "paper", "scissors"];
+
+const rps_row = new ActionRowBuilder()
+    .addComponents(
+        new ButtonBuilder()
+            .setCustomId('rock')
+            .setLabel('Rock')
+            .setStyle(ButtonStyle.Primary),
+        new ButtonBuilder()
+            .setCustomId('paper')
+            .setLabel('Paper')
+            .setStyle(ButtonStyle.Primary),
+        new ButtonBuilder()
+            .setCustomId('scissors')
+            .setLabel('Scissors')
+            .setStyle(ButtonStyle.Primary)
+    );
+
+/**
+ * rps_win (used with wrapper calc_rps_win below) will return whether the USER won or lost
+ * excludes scenarios where result is a tie; handled by calc_rps_win
+ */
+
+const rps_win = {
+    'rock': {
+        'paper': 'You lost!',
+        'scissors': 'You won!'
+    }, 'paper': {
+        'rock': 'You won!',
+        'scissors': 'You lost!'
+    }, 'scissors': {
+        'rock': 'You lost!',
+        'paper': 'You won!'
+    }
+};
+
+// wraps rps_win in a function
+const calc_rps_win = choices => (choices.user == choices.computer ? 'It\'s a tie!' : rps_win[choices.user][choices.computer]);
+
 module.exports = {
-    name: "rpsbot",
-    cooldown: 3,
-    description: "ROCK, PAPER, SCISSORS! but with the bot lol",
-    execute(message, args) {  
-        const filter = m => m.author.id == message.author.id;
-        //message.channel.send(`Do you choose rock, paper, or scissors, ${message.author}`);
-
-        let person1choice = ""
-
-        message.channel.send("ROCK. PAPER. SCISSORS!!!")
-        const waittime = 15000;
-        function waitForMessage(retryCount, thefilter) {
-            message.channel.awaitMessages(thefilter, {max: 1}).then(collected => {
-            if (retryCount == 0) {
-                if (collected.first().content.toLowerCase() == "rock") {
-                    person1choice = collected.first().content.toLowerCase()
-                } else if (collected.first().content.toLowerCase() == "paper") {
-                    person1choice = collected.first().content.toLowerCase()
-                } else if (collected.first().content.toLowerCase() == "scissors") {
-                    person1choice = collected.first().content.toLowerCase()
-                } else {
-                    message.channel.send("invalid response, retry the game")
-                    collected.first().delete()
-                    return;
-                }
+    data: new SlashCommandBuilder()
+        .setName('rps-bot')
+        .setDescription('Play rock, paper, scissors with the bot!'),
+    category: 'minigames',
+    cooldown: 10,
+    async execute(interaction) {
+        let comp_choice = choices[Math.floor(Math.random() * choices.length)];
+        await interaction.reply({ content: 'I\'ve selected my choice. Now you choose! You have 10 seconds', components: [rps_row] });
+        
+        const filter = i => choices.includes(i.customId) && (i.user.id == interaction.user.id);
+        const collector = interaction.channel.createMessageComponentCollector({ filter, time: 10000, componentType: ComponentType.Button, max: 1 });
+        
+        collector.on('collect', async i => {
+            if (i.customId === comp_choice) {
+                await i.update({ content: `It's a tie!`, components: [] });
+            } else {
+                await i.update({ content: `${calc_rps_win({
+                    'user': i.customId,
+                    'computer': comp_choice
+                })}`, components: [] });
             }
-            collected.first().delete()
-            winCheck()
-            return;
-            }).catch((error) => {
-                console.error(error)
-                message.channel.send("ERROR")
-                return;
-            });
-        }   
-        async function winCheck() {
-            const rpslist = ["rock", "paper", "scissors"]
-            let compchoice = rpslist[Math.ceil(Math.random()*2)]
-            let wonembed = new Discord.MessageEmbed()
-                .setTitle("Rock, Paper, Scissors! Game")
-                .addFields(
-                    { name: `${message.author.username}'s choice`, value: "```" + person1choice + "```" },
-                    { name: `Computer's choice`, value: "```" + compchoice + "```" }
-                )
-            if (person1choice == "rock" && compchoice == "rock") {
-                wonembed.setFooter("TIE!")
-            } else if (person1choice == "rock" && compchoice == "paper") {
-                wonembed.setFooter("Computer won!")
-            } else if (person1choice == "rock" && compchoice == "scissors") {
-                wonembed.setFooter(`${message.author.username} won!`)
-            } else if (person1choice == "paper" && compchoice == "rock") {
-                wonembed.setFooter(`${message.author.username} won!`)
-            } else if (person1choice == "paper" && compchoice == "paper") {
-                wonembed.setFooter("TIE!")
-            } else if (person1choice == "paper" && compchoice == "scissors") {
-                wonembed.setFooter("Computer won!")
-            } else if (person1choice == "scissors" && compchoice == "rock") {
-                wonembed.setFooter("Computer won!")
-            } else if (person1choice == "scissors" && compchoice == "paper") {
-                wonembed.setFooter(`${message.author.username} won!`)
-            } else if (person1choice == "scissors" && compchoice == "scissors") {
-                wonembed.setFooter("TIE!")
-            }
-            message.channel.send({ embeds: [wonembed] })
-        }
-        async function runLoop(retryCount) {
-            if (retryCount == 0) {
-                message.channel.send(`Do you choose rock, paper, or scissors, ${message.author}?`)
-                waitForMessage(retryCount, filter)    
-            }
-        }
-        runLoop(0)
+        });
     }
 }

@@ -1,15 +1,10 @@
-//three features:
-
-// - timer 
-// - stopwatch
-// - markdown from provided ISO-conforming date (priority)
-
-//turn into slash command?
-
+const { SlashCommandBuilder } = require("discord.js");
 const moment = require("moment");
 
 module.exports = {
-    name: "timestampconvert",
+    data: new SlashCommandBuilder()
+        .setName('convert-ts')
+        .setDescription('Converts '),
     async execute(interaction) {
         try {
             let timetoconvert = interaction.options.get('date').value;
