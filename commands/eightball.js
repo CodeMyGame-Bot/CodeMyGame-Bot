@@ -1,6 +1,8 @@
 const { SlashCommandBuilder } = require("discord.js");
 
-Array.prototype.choice = () => this[Math.floor(Math.random() * this.length)];
+Array.prototype.choice = function() {
+    return this[Math.floor(Math.random() * this.length)];
+}
 
 const answers = ["As I see it, yes.",
     "Ask again later.",
@@ -27,7 +29,7 @@ const answers = ["As I see it, yes.",
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('eightball')
-        .setDescription('Enter a question that the 8-Ball can answer!')
+        .setDescription('Enter a question that the 8-Ball can answer (don\'t take the bot\'s answer seriously!)')
         .addStringOption(option =>
             option
                 .setName('question')
@@ -40,6 +42,6 @@ module.exports = {
     async execute(interaction) {
         await interaction.reply({ content: "Wrote your question? Thought about it? Okay... one second.", ephemeral: true });
         await new Promise(r => setTimeout(r, 2000));
-        await interaction.editReply(answers.choice());
+        await interaction.editReply({ content: `The answer to your question '${interaction.options.getString('question')}' is '${answers.choice()}'` });
     }
 } 

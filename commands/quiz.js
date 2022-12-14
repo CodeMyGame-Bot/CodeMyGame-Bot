@@ -28,14 +28,13 @@ module.exports = {
                         new TextInputBuilder()
                             .setCustomId('quiz-guess')
                             .setLabel('Your Guess (has to be a number)')
-                            // .setMaxLength((100 + 100).toString().length)
-                            .setPlaceholder(0)
+                            .setPlaceholder('0')
                             .setStyle(TextInputStyle.Short)
                             .setRequired(true)
                     )
             );
         
-        await interaction.reply({ content: 'FLASH QUIZ (everyone has 20 seconds to guess)', components: showQuizModal });
+        await interaction.reply({ content: 'FLASH QUIZ (everyone has 20 seconds to guess)', components: [showQuizModal] });
 
         const filter = i => (i.customId == 'show-quiz-modal');
         const collector = interaction.channel.createMessageComponentCollector({ filter, time: 20000, componentType: ComponentType.Button });
@@ -43,12 +42,14 @@ module.exports = {
         async function checkGuess(i) {
             if (!i.isModalSubmit()) return;
 
-            const user_guess = i.getTextInputValue('quiz-guess');
-            if (Number.isInteger(user_guess) && parseInt(user_guess, 10) > 0 && parseInt(user_guess, 10) == answer) {
-                collector.end(i.user.id);
-                await i.reply({ content: 'Congratulations! You got the answer right!', ephemeral: true });
+            const user_guess = Number.parseInt(i.fields.getTextInputValue('quiz-guess'));
+            if (user_guess === NaN) {
+                await i.reply({ content: 'You didn\'t enter a number!'});
+            } else if (user_guess !== answer) {
+                await i.reply({ content: `Sorry, ${user_guess} is not the right answer`, ephemeral: true });
             } else {
-                await i.reply({ content: 'Sorry, that\'s not the right answer', ephemeral: true });
+                collector.stop(i.user.id);
+                await i.reply({ content: 'Congratulations! You got the answer right!', ephemeral: true });
             }
         }
 

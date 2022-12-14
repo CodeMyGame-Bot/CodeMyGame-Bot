@@ -1,4 +1,4 @@
-const { EmbedBuilder, SlashCommandBuilder } = require('discord.js')
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 
 let loader_states = ['-', '\\', '|', '/'];
 
@@ -7,12 +7,12 @@ let nextState = currState => loader_states[(loader_states.indexOf(currState) + 1
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('progress')
-        .setDescription('Make a progress bar!')
+        .setDescription('Make a progress bar! (might not be time-accurate due to network limits)')
         .addIntegerOption(option =>
             option
                 .setName('bars')
                 .setDescription('The number of bars in the progress bar')
-                .setMinValue(0)
+                .setMinValue(1)
                 .setMaxValue(100)
                 .setRequired(true)
         )
@@ -20,16 +20,16 @@ module.exports = {
             option
                 .setName('time')
                 .setDescription('Time between each advance of the progress bar (in milliseconds)')
-                .setMinValue(0)
-                .setMaxValue(2000)
+                .setMinValue(500)
+                .setMaxValue(1000)
                 .setRequired(true)
         ),
     category: 'utility',
     cooldown: 60,
     async execute(interaction) {
         let [bars, timer] = [interaction.options.getInteger('bars'), interaction.options.getInteger('time')];
-        let progresso = "";
-        let loader = "-";
+        let progresso = ' ';
+        let loader = '-';
 
         let progressEmbed = new EmbedBuilder()
             .setTitle('Progress Bar')
@@ -42,7 +42,7 @@ module.exports = {
         for (let x = 0; x < bars + 1; x++) {
             progresso = "[" + "#".repeat(x) + "-".repeat(bars - x) + "]";
             progressEmbed.setDescription(progresso);
-            progressEmbed.setFooter(`${Number.parseFloat((bars / x) * 100).toFixed(1)}% ${loader}`);
+            progressEmbed.setFooter({ text: `${Number.parseFloat((x / bars) * 100).toFixed(1)}% ${loader}` });
             loader = nextState(loader);
             await interaction.editReply({ embeds: [progressEmbed] })
             await new Promise(r => setTimeout(r, timer));
@@ -50,7 +50,7 @@ module.exports = {
 
         let end = new Date().toUTCString();
         
-        progressEmbed.setFooter(`Started task on ${start}\nCompleted task on ${end} UTC`);
+        progressEmbed.setFooter({ text: `Started progress bar on ${start}\nCompleted progress bar on ${end}` });
         await interaction.editReply({ embeds: [progressEmbed] });
     }
 }

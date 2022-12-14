@@ -1,5 +1,8 @@
 {
-    "version": "v2.3.0",
-    "unstable_test_release": "v2.3.1 (removed TicTacToe)",
-    "clientId": "812153361427988544"
+    "version": "v0.2.0",
+    "clientIds": {
+        "official": "734539944659517591",
+        "dev": "812153361427988544"    
+    },
+    "dev": false
 }

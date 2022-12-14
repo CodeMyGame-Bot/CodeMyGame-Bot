@@ -26,16 +26,16 @@ module.exports = {
                         option
                             .setName('num1')
                             .setDescription('The first number to add (augend)')
-                            // .setMinValue(-Number.MAX_SAFE_INTEGER)
-                            // .setMaxValue(Number.MAX_SAFE_INTEGER)
+                            .setMinValue(-Number.MAX_SAFE_INTEGER)
+                            .setMaxValue(Number.MAX_SAFE_INTEGER)
                             .setRequired(true)
                     )
                     .addIntegerOption(option =>
                         option
                             .setName('num2')
                             .setDescription('The number to add to the first number (addend)')
-                            // .setMinValue(-Number.MAX_SAFE_INTEGER)
-                            // .setMaxValue(Number.MAX_SAFE_INTEGER)
+                            .setMinValue(-Number.MAX_SAFE_INTEGER)
+                            .setMaxValue(Number.MAX_SAFE_INTEGER)
                             .setRequired(true)
                     )
                 )
@@ -47,16 +47,16 @@ module.exports = {
                             option
                                 .setName('num1')
                                 .setDescription('The first number to subtract (minuend)')
-                                // .setMinValue(-Number.MAX_SAFE_INTEGER)
-                                // .setMaxValue(Number.MAX_SAFE_INTEGER)
+                                .setMinValue(-Number.MAX_SAFE_INTEGER)
+                                .setMaxValue(Number.MAX_SAFE_INTEGER)
                                 .setRequired(true)
                         )
                         .addIntegerOption(option =>
                             option
                                 .setName('num2')
                                 .setDescription('The number to subtract from the first number (subtrahend)')
-                                // .setMinValue(-Number.MAX_SAFE_INTEGER)
-                                // .setMaxValue(Number.MAX_SAFE_INTEGER)
+                                .setMinValue(-Number.MAX_SAFE_INTEGER)
+                                .setMaxValue(Number.MAX_SAFE_INTEGER)
                                 .setRequired(true)
                         )
                 )
@@ -68,16 +68,16 @@ module.exports = {
                             option
                                 .setName('num1')
                                 .setDescription('The first number to multiply (multiplicand)')
-                                // .setMinValue(-Number.MAX_SAFE_INTEGER)
-                                // .setMaxValue(Number.MAX_SAFE_INTEGER)
+                                .setMinValue(-Number.MAX_SAFE_INTEGER)
+                                .setMaxValue(Number.MAX_SAFE_INTEGER)
                                 .setRequired(true)
                         )
                         .addIntegerOption(option =>
                             option
                                 .setName('num2')
                                 .setDescription('The number to multiply with the first number (multiplier)')
-                                // .setMinValue(-Number.MAX_SAFE_INTEGER)
-                                // .setMaxValue(Number.MAX_SAFE_INTEGER)
+                                .setMinValue(-Number.MAX_SAFE_INTEGER)
+                                .setMaxValue(Number.MAX_SAFE_INTEGER)
                                 .setRequired(true)
                         )
                 )
@@ -88,15 +88,15 @@ module.exports = {
                         .addIntegerOption(new SlashCommandIntegerOption()
                             .setName('num1')
                             .setDescription('The first number to divide (dividend)')
-                            // .setMinValue(-Number.MAX_SAFE_INTEGER)
-                            // .setMaxValue(Number.MAX_SAFE_INTEGER)
+                            .setMinValue(-Number.MAX_SAFE_INTEGER)
+                            .setMaxValue(Number.MAX_SAFE_INTEGER)
                             .setRequired(true)
                         )
                         .addIntegerOption(new SlashCommandIntegerOption()
                             .setName('num2')
                             .setDescription('The number to divide the first number by (divisor)')
-                            // .setMinValue(-Number.MAX_SAFE_INTEGER)
-                            // .setMaxValue(Number.MAX_SAFE_INTEGER)
+                            .setMinValue(-Number.MAX_SAFE_INTEGER)
+                            .setMaxValue(Number.MAX_SAFE_INTEGER)
                             .setRequired(true)
                         )
                 )
@@ -114,7 +114,7 @@ module.exports = {
                                 .setName('base')
                                 .setDescription('The base length of the triangle')
                                 .setMinValue(0)
-                                // .setMaxValue(Number.MAX_SAFE_INTEGER)
+                                .setMaxValue(Number.MAX_SAFE_INTEGER)
                                 .setRequired(true)
                         )
                         .addIntegerOption(option =>
@@ -122,7 +122,7 @@ module.exports = {
                                 .setName('height')
                                 .setDescription('The height of the triangle')
                                 .setMinValue(0)
-                                // .setMaxValue(Number.MAX_SAFE_INTEGER)
+                                .setMaxValue(Number.MAX_SAFE_INTEGER)
                                 .setRequired(true)
                         )
                 )
@@ -135,7 +135,7 @@ module.exports = {
                                 .setName('radius')
                                 .setDescription('The radius of the circle')
                                 .setMinValue(0)
-                                // .setMaxValue(Number.MAX_SAFE_INTEGER)
+                                .setMaxValue(Number.MAX_SAFE_INTEGER)
                                 .setRequired(true)
                         )
                 )
@@ -162,12 +162,6 @@ module.exports = {
     async execute(interaction) {
         switch (interaction.options.getSubcommandGroup()) {
             case 'arithmetic':
-                // if (
-                //     interaction.options.get('num1') > Number.MAX_SAFE_INTEGER
-                //     || interaction.options.get('num2') > Number.MAX_SAFE_INTEGER
-                //     || interaction.options.get('num1') < -Number.MAX_SAFE_INTEGER
-                //     || interaction.options.get('num2') < -Number.MAX_SAFE_INTEGER
-                //     ) return await interaction.reply({ content: 'The integers you provided exceed the max limits the bot can handle!', ephemeral: true });
                 let result;
                 switch (interaction.options.getSubcommand()) {
                     case 'add':

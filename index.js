@@ -1,8 +1,6 @@
-const { Collection, Client, GatewayIntentBits, REST, Events, PresenceUpdateStatus, ActivityType, EmbedBuilder } = require('discord.js');
+const { Collection, Client, GatewayIntentBits, REST, Events, PresenceUpdateStatus, ActivityType, EmbedBuilder, Routes } = require('discord.js');
 require('dotenv').config();
-// const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
-const { clientId } = require('./config.json');
+const { clientIds, dev } = require('./config.json');
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -15,7 +13,7 @@ const client = new Client({
     ],
 });
 
-// let prefix = process.env.prefix;
+console.log(`Running ${dev ? 'dev' : 'official'} bot`);
 
 client.commands = new Collection();
 const commands = [];
@@ -26,24 +24,37 @@ for (const file of commandFiles) {
     const command = require(path.join(commandPath, file));
 
     if ('data' in command && 'execute' in command) {
+        console.log(`${command.data.name} is being added to list of commands...`);
         client.commands.set(command.data.name, command);
         commands.push(command.data.toJSON());
     } else {
-        console.warn(`Comamnd at path ${path.join(commandPath, file)} is missing 'data' or 'execute' field. This command might not work correctly.`);
+        console.warn(`Command at path ${path.join(commandPath, file)} is missing 'data' or 'execute' field. This command might not work correctly.`);
     }
 }
 
-const rest = new REST({ version: '9' }).setToken(process.env.token);
+let rest;
 
+if (dev) {
+    rest = new REST({ version: '10' }).setToken(process.env.dev_token);
+} else {
+    rest = new REST({ version: '10' }).setToken(process.env.official_token);
+}
 
 (async () => {
     try {
-        console.log('Started updating application (/) commands');
-
-        await rest.put(
-            Routes.applicationCommands(clientId),
-            { body: commands }
-        );
+        if (dev) {
+            console.log('Started updating application (/) commands for dev bot');
+            await rest.put(
+                Routes.applicationCommands(clientIds.dev),
+                { body: commands }
+            );
+        } else {
+            console.log('Started updating application (/) commands for official bot');
+            await rest.put(
+                Routes.applicationCommands(clientIds.official),
+                { body: commands }
+            );
+        }
 
         console.log(`Successfully updated application (/) commands!`);
     } catch (error) {
@@ -52,7 +63,6 @@ const rest = new REST({ version: '9' }).setToken(process.env.token);
 })();
 
 const cooldowns = new Collection();
-// const interactioncooldowns = new Collection();
 
 client.once(Events.ClientReady, async () => {
     client.user.setPresence({ status: PresenceUpdateStatus.Online, activities: [{ name: 'CodeMyGame code me', type: ActivityType.Watching }] })
@@ -269,4 +279,8 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 });
 
-client.login(process.env.token);
+if (dev) {
+    client.login(process.env.dev_token);
+} else {
+    client.login(process.env.official_token);
+}

@@ -55,12 +55,12 @@ module.exports = {
         
         collector.on('collect', async i => {
             if (i.customId === comp_choice) {
-                await i.update({ content: `It's a tie!`, components: [] });
+                await i.update({ content: `It's a tie! You both chose ${comp_choice}`, components: [] });
             } else {
                 await i.update({ content: `${calc_rps_win({
                     'user': i.customId,
                     'computer': comp_choice
-                })}`, components: [] });
+                })}\nYou chose ${i.customId}, and I chose ${comp_choice}`, components: [] });
             }
         });
     }

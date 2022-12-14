@@ -17,7 +17,7 @@ module.exports = {
     category: 'utility',
     cooldown: 10,
     async execute(interaction) {
-        if (!hex_test.test(interaction.options.get('number'))) {
+        if (!hex_test.test(interaction.options.getString('number'))) {
             return await interaction.reply('Not a valid hexadecimal number!');
         }
 
