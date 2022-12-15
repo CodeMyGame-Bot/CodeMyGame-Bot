@@ -1,35 +1,27 @@
-const { EmbedBuilder, ActionRowBuilder, ComponentType, SlashCommandBuilder, ButtonStyle, ButtonBuilder } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ComponentType, SlashCommandBuilder, ButtonStyle, ButtonBuilder, StringSelectMenuBuilder, ActionRow } = require("discord.js");
+
+// archived: "fun", "currency", "profile"
 const CommandHelpInfo = {
-    /*"fun": {
-        "id": "fun",
-        "label": "Fun",
-        "embed": null
-    },
-    "currency": {
-        "id": "currency",
-        "label": "Currency",
-        "embed": null
-    },*/
     "utility": {
         "id": "utility",
         "label": "Utility",
+        "description": "Various random utility commands that might be useful!",
         "embed": new EmbedBuilder()
             .setTitle(`Utility Help`)
+            .setDescription("Various random utility commands that might be useful!")
     },
     "minigames": {
         "id": "minigames",
         "label": "Minigames",
+        "description": "A collection of minigames you're sure to enjoy!",
         "embed": new EmbedBuilder()
             .setTitle(`Minigames Help`)
-    },/*
-    "profile": {
-        "id": "profile",
-        "label": "Profile",
-        "embed": null
-    },*/
+            .setDescription("A collection of minigames you're sure to enjoy!")
+    },
     "home": {
         "id": "home",
         "label": "Home",
+        "description": "The home page!",
         "embed": null
     }
 }
@@ -44,71 +36,52 @@ CommandHelpInfo.home.embed = new EmbedBuilder()
         { name: "Slash Commands #️⃣ (BETA)", value: "```Type \"/\", and then scroll through the menu to find the list of commands under CodeMyGame Bot (I will list them here too just in case, also available when typing \"/\")```"},
         { name: "Home", value: "Return to this embed once you're in another embed with the Home button"}
     )
+    .setDescription(CommandHelpInfo.home.description)
     .setFooter({ text: '**This embed will expire in 15 seconds**'});
 
-const HelpRows = [];
+// const HelpRows = [];
 
-let buttons_added = 0;
+// let buttons_added = 0;
 
-for (const category in CommandHelpInfo) {
-    if (category != 'home') {
-        if (buttons_added == 0) {
-            HelpRows.push(new ActionRowBuilder())
-        }
+// for (const category in CommandHelpInfo) {
+//     if (category != 'home') {
+//         if (buttons_added == 0) {
+//             HelpRows.push(new ActionRowBuilder())
+//         }
 
-        HelpRows[HelpRows.length - 1].addComponents(
-            new ButtonBuilder()
-                .setCustomId(CommandHelpInfo[category].id)
-                .setLabel(CommandHelpInfo[category].label)
-                .setStyle(ButtonStyle.Primary)
-        )
+//         HelpRows[HelpRows.length - 1].addComponents(
+//             new ButtonBuilder()
+//                 .setCustomId(CommandHelpInfo[category].id)
+//                 .setLabel(CommandHelpInfo[category].label)
+//                 .setStyle(ButtonStyle.Primary)
+//         )
 
-        buttons_added += 1;
+//         buttons_added += 1;
 
-        if (buttons_added >= 5) {
-            buttons_added = 0
-        }
-    }
-}
+//         if (buttons_added >= 5) {
+//             buttons_added = 0
+//         }
+//     }
+// }
 
-HelpRows.push(
-    new ActionRowBuilder()
-        .addComponents(
-            new ButtonBuilder()
-                .setCustomId(CommandHelpInfo.home.id)
-                .setLabel(CommandHelpInfo.home.label)
-                .setStyle(ButtonStyle.Danger)
-        )
-);
+// HelpRows.push(
+//     new ActionRowBuilder()
+//         .addComponents(
+//             new ButtonBuilder()
+//                 .setCustomId(CommandHelpInfo.home.id)
+//                 .setLabel(CommandHelpInfo.home.label)
+//                 .setStyle(ButtonStyle.Danger)
+//         )
+// );
 
 let help_embed_configured = false;
 
-// const helpCategories = [];
-
-// for (const category of CommandHelpInfo) {
-//     helpCategories.push({
-//         'label': category,
-//         'description': ,
-//     })   
-// }
-
-// const helpSelectMenu = new SelectMenuBuilder()
-//     .setCustomId('help');
-
-// const helpRow = new ActionRowBuilder()
-//     .addComponents(
-//         helpSelectMenu
-//     );
-
 // CommandHelpInfo.fun.embed = new EmbedBuilder()
 //     .addFields(
-//         { name: "/eightball", value: "Enter a question that the 8ball can answer!" },
 //         //{ name: "=args-info", value: "It will return all the arguments provided after the command. (However, the command will read the arguments and split them by spaces, meaning every new space will mean a new argument for the command)"},
 //         //{ name: "=choice", value: "```It'll just ask you a question, and you can answer it!```"},
-//         { name: "=funnycommand", value: "```It's literally just for yt if you actually use this though```"},
 //         { name: "=funstuff", value: "Click on a number, and it will give you the response based on what you reacted to! <BETA; it only tells you the first reaction you did, and only tells you if you reacted with the given reactions>"},
 //         { name: "=guessinggame", value: "A simple guessing game using discord.js! v2.0.0 UPDATE: HINTS!!!"},
-//         //{ name: "=ping", value: "It's like args-info, except the arguments will be dmmed to you"},
 //         { name: "=react-custom", value: "It only supports three emojis (apples, oranges, and grapes), but you can type it in and you will get the corresponding result"},
 //         { name: "=testing", value: "I'll just dump some js here, hope it works!"}
 //     );
@@ -120,23 +93,12 @@ let help_embed_configured = false;
 //     );
 // CommandHelpInfo.utility.embed = new EmbedBuilder()
 //     .addFields(
-//         { name: "/devlook", value: "A look into the future features of the bot!" },
 //         { name: "/timestampconvert", value: "Converting ISO dates to Unix timestamps"}, 
-//         { name: "/version", value: "It'll just tell you the version of the bot!" },
-//         { name: "/progress", value: "Creates a progress bar, syntax =progress <number of bars> <waittime between each bar in milliseconds> <text; optional>. REMEMBER: If you provide a waittime below 1000, the bot may lag due to limits on message edits set by Discord. You can set the waittime below 1000, but it may not work, just saying!"},
-//         { name: "/pingo", value: "Replies with bot ping status" },
-//         { name: "/random", value: "Returns a random number using the given max limit" },
-//         { name: "/areac", value: "Computes the area of a circle given the radius" },
-//         { name: "/circumference", value: "Computes the circumference (perimeter) of a circle given the radius" },
-//         { name: "/areat", value: "Computes the area of a triangle given base and height" },
-//         { name: "/hex", value: "Converts two hexadecimals to a binary byte" },
 //         { name: "print sample error", value: "Prints a sample error (this is just for fun :])"},
 //     );
 // CommandHelpInfo.minigames.embed = new EmbedBuilder()
 //     .addFields(
 //         { name: "=fight", value: "Fight! Please don't spam btw" },
-//         { name: "=rps", value: "ROCK, PAPER, SCISSORS!" },
-//         { name: "=rpsbot", value: "ROCK, PAPER, SCISSORS! but with the bot lol" }
 //     );
 // CommandHelpInfo.profile.embed = new EmbedBuilder()
 //     .addFields(
@@ -162,28 +124,54 @@ module.exports = {
             }
             help_embed_configured = true;
         }
+
+        const helpSelect = new StringSelectMenuBuilder()
+            .setCustomId('help')
+            .setPlaceholder('Nothing selected')
+
+        for (let category in CommandHelpInfo) {
+            helpSelect.addOptions(
+                {
+                    label: CommandHelpInfo[category].label,
+                    description: CommandHelpInfo[category].description,
+                    value: CommandHelpInfo[category].id
+                }
+            )
+        }
+
+        const helpRow = new ActionRowBuilder()
+            .addComponents(
+                helpSelect
+            )
         
-        await interaction.reply({ embeds: [CommandHelpInfo.home.embed], components: HelpRows, ephemeral: true });
+        // await interaction.reply({ embeds: [CommandHelpInfo.home.embed], components: HelpRows, ephemeral: true });
+        await interaction.reply({ embeds: [CommandHelpInfo.home.embed], components: [helpRow], ephemeral: true });
 
         const filter = i => i.user.id == interaction.user.id;
         const helpCollector = interaction.channel.createMessageComponentCollector({ 
-            filter, time: 15000, idle: 10000, componentType: ComponentType.Button 
+            filter, time: 15000, idle: 10000, // componentType: ComponentType.Button
+            componentType: ComponentType.StringSelect
         });
 
         helpCollector.on('collect', async i => {
+            // helpRow.components[0].setPlaceholder(i.values[0]);
             await i.update({
-                embeds: [CommandHelpInfo[i.customId].embed]
+                embeds: [CommandHelpInfo[i.values[0]].embed]
+                // components: [helpRow]
             });
         });
 
         helpCollector.on('end', async collected => {
-            for (const row of HelpRows) {
-                for (const component of row.components) {
-                    component.setDisabled(true);
-                }
-            }
+            // for (const row of HelpRows) {
+            //     for (const component of row.components) {
+            //         component.setDisabled(true);
+            //     }
+            // }
 
-            await interaction.editReply({ components: HelpRows });
+            helpRow.components[0].setDisabled(true);
+
+            // await interaction.editReply({ components: HelpRows });
+            await interaction.editReply({ components: [helpRow] });
         });
     }
 }
