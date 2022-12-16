@@ -7,6 +7,8 @@ const operators = {
     'divide': '/'
 }
 
+const isString = (val) => typeof val == 'string' || val instanceof String;
+
 module.exports = {
     description: 'Random math functions!',
     category: 'utility',
@@ -63,23 +65,35 @@ module.exports = {
                 .addSubcommand(subcommand =>
                     subcommand
                         .setName('multiply')
-                        .setDescription('Multiplies two numbers!')
-                        .addIntegerOption(option =>
+                        .setDescription('Multiplies two numbers! (supports string multiplication)')
+                        .addStringOption(option => 
                             option
                                 .setName('num1')
-                                .setDescription('The first number to multiply (multiplicand)')
-                                .setMinValue(-Number.MAX_SAFE_INTEGER)
-                                .setMaxValue(Number.MAX_SAFE_INTEGER)
+                                .setDescription('The first value to multiply!')
                                 .setRequired(true)
                         )
-                        .addIntegerOption(option =>
+                        .addStringOption(option =>
                             option
                                 .setName('num2')
-                                .setDescription('The number to multiply with the first number (multiplier)')
-                                .setMinValue(-Number.MAX_SAFE_INTEGER)
-                                .setMaxValue(Number.MAX_SAFE_INTEGER)
+                                .setDescription('The second value to multiply!')
                                 .setRequired(true)
                         )
+                        // .addIntegerOption(option =>
+                        //     option
+                        //         .setName('num1')
+                        //         .setDescription('The first number to multiply (multiplicand)')
+                        //         .setMinValue(-Number.MAX_SAFE_INTEGER)
+                        //         .setMaxValue(Number.MAX_SAFE_INTEGER)
+                        //         .setRequired(true)
+                        // )
+                        // .addIntegerOption(option =>
+                        //     option
+                        //         .setName('num2')
+                        //         .setDescription('The number to multiply with the first number (multiplier)')
+                        //         .setMinValue(-Number.MAX_SAFE_INTEGER)
+                        //         .setMaxValue(Number.MAX_SAFE_INTEGER)
+                        //         .setRequired(true)
+                        // )
                 )
                 .addSubcommand(subcommand =>
                     subcommand
@@ -148,14 +162,14 @@ module.exports = {
                                 .setName('radius')
                                 .setDescription('The radius of the triangle')
                                 .setMinValue(0)
-                                // .setMaxValue(Number.MAX_SAFE_INTEGER)
+                                .setMaxValue(Number.MAX_SAFE_INTEGER)
                         )
                         .addIntegerOption(option =>
                             option
                                 .setName('diameter')
                                 .setDescription('The diameter of the triangle')
                                 .setMinValue(0)
-                                // .setMaxValue(Number.MAX_SAFE_INTEGER)
+                                .setMaxValue(Number.MAX_SAFE_INTEGER)
                         )
                 )
         ),
@@ -163,24 +177,52 @@ module.exports = {
         switch (interaction.options.getSubcommandGroup()) {
             case 'arithmetic':
                 let result;
+                let reply;
                 switch (interaction.options.getSubcommand()) {
                     case 'add':
                         result = interaction.options.getInteger('num1') + interaction.options.getInteger('num2');
+                        reply = `${interaction.options.getInteger('num1')} ${operators[interaction.options.getSubcommand()]} ${interaction.options.getInteger('num2')} = `;
                         break;
                     case 'subtract':
                         result = interaction.options.getInteger('num1') - interaction.options.getInteger('num2');
+                        reply = `${interaction.options.getInteger('num1')} ${operators[interaction.options.getSubcommand()]} ${interaction.options.getInteger('num2')} = `;
                         break;
                     case 'multiply':
-                        result = interaction.options.getInteger('num1') * interaction.options.getInteger('num2');
+                        let num1 = interaction.options.getString('num1');
+                        let num2 = interaction.options.getString('num2');
+
+                        num1 = isNaN(num1) ? num1 : parseInt(num1, 10);
+                        num2 = isNaN(num2) ? num2 : parseInt(num2, 10);
+                        
+                        if (!isString(num1) && !isString(num2)) {
+                            result = num1 * num2
+                        } else if (isString(num1) && isString(num2)) {
+                            return await interaction.reply('Both values can\'t be strings!');
+                        } else if (isString(num1)) {
+                            if ((reply + num1.repeat(num2)).length > 2000) {
+                                return await interaction.reply(`I'm sorry, the result for ${interaction.options.getString('num1')} * ${interaction.options.getString('num2')} is too big to display in Discord`);
+                            }
+                            result = num1.repeat(num2);
+                        } else if (isString(num2)) {
+                            if ((reply + num2.repeat(num1)).length > 2000) {
+                                return await interaction.reply(`I'm sorry, the result for ${interaction.options.getString('num1')} * ${interaction.options.getString('num2')} is too big to display in Discord`);
+                            }
+                            result = num2.repeat(num1);
+                        }
+
+                        // result = interaction.options.getInteger('num1') * interaction.options.getInteger('num2');
+                        reply = `${interaction.options.getString('num1')} ${operators[interaction.options.getSubcommand()]} ${interaction.options.getString('num2')} = `;
                         break;
                     case 'divide':
                         if (interaction.options.getInteger('num2') == 0) {
                             return await interaction.reply({ content: 'You can\'t divide by zero!', ephemeral: true });
                         }
                         result = interaction.options.getInteger('num1') / interaction.options.getInteger('num2');
+                        reply = `${interaction.options.getInteger('num1')} ${operators[interaction.options.getSubcommand()]} ${interaction.options.getInteger('num2')} = `;
                         break;
                 }
-                await interaction.reply(`${interaction.options.getInteger('num1')} ${operators[interaction.options.getSubcommand()]} ${interaction.options.getInteger('num2')} = ${result}`);
+
+                await interaction.reply(reply + result.toString());
             case 'geometry':
                 let area;
                 switch (interaction.options.getSubcommand()) {

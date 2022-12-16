@@ -11,6 +11,10 @@ Welcome to the official repository for CodeMyGame Bot, which runs on discord.js 
 - [x] fix (/rps)
 - [ ] fix (/help)
 
+## TASKS
+- [ ] change version number in `config.json` and `package.json`; rebuild using `npm install` each time
+- [ ] update /devlook to display first five features i'm working on
+
 ## UNNECESSARY:
 <!-- /*
 * unnecessary dependencies for now

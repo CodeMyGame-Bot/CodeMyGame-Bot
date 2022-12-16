@@ -13,7 +13,7 @@ const client = new Client({
     ],
 });
 
-console.log(`Running ${dev ? 'dev' : 'official'} bot`);
+console.log(`${Date.now()} | Running ${dev ? 'dev' : 'official'} bot\n\n`);
 
 client.commands = new Collection();
 const commands = [];
@@ -24,13 +24,15 @@ for (const file of commandFiles) {
     const command = require(path.join(commandPath, file));
 
     if ('data' in command && 'execute' in command) {
-        console.log(`${command.data.name} is being added to list of commands...`);
+        console.log(`${Date.now()} | ${command.data.name} is being added to list of commands...`);
         client.commands.set(command.data.name, command);
         commands.push(command.data.toJSON());
     } else {
-        console.warn(`Command at path ${path.join(commandPath, file)} is missing 'data' or 'execute' field. This command might not work correctly.`);
+        console.warn(`${Date.now()} | Command at path ${path.join(commandPath, file)} is missing 'data' or 'execute' field. This command might not work correctly.`);
     }
 }
+
+console.log('\n');
 
 let rest;
 
@@ -43,22 +45,22 @@ if (dev) {
 (async () => {
     try {
         if (dev) {
-            console.log('Started updating application (/) commands for dev bot');
+            console.log(`${Date.now()} | Started updating application (/) commands for dev bot`);
             await rest.put(
                 Routes.applicationCommands(clientIds.dev),
                 { body: commands }
             );
         } else {
-            console.log('Started updating application (/) commands for official bot');
+            console.log(`${Date.now()} | Started updating application (/) commands for official bot`);
             await rest.put(
                 Routes.applicationCommands(clientIds.official),
                 { body: commands }
             );
         }
 
-        console.log(`Successfully updated application (/) commands!`);
+        console.log(`${Date.now()} | Successfully updated application (/) commands!\n`);
     } catch (error) {
-        console.error(error);
+        console.error(`${Date.now()} | ${error}\n`);
     }
 })();
 
@@ -66,7 +68,7 @@ const cooldowns = new Collection();
 
 client.once(Events.ClientReady, async () => {
     client.user.setPresence({ status: PresenceUpdateStatus.Online, activities: [{ name: 'CodeMyGame code me', type: ActivityType.Watching }] })
-    console.log("Bot is ready!");
+    console.log(`${Date.now()} | Bot is ready!`);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
@@ -96,38 +98,6 @@ client.on(Events.InteractionCreate, async interaction => {
             return interaction.reply({ embeds: [expirationEmbed], ephemeral: true });
         }
     }
-
-    /* 
-    //profile commands
-    if (icommand === 'setdesc') { //add dev to end when devving
-        try { 
-            let desc = interaction.options.get('profiledescription').value
-            let affectedRows = await userinfo.update({ description: desc }, { where: { name: interaction.member.user.username } });
-            await interaction.reply({ content: `Description updated to ${desc}`, ephemeral: true})
-        } catch (error) {
-            console.log(error)
-        }
-    } else if (icommand === 'getdesc') { //add dev to end when devving
-        try {
-            let userdesc = await userinfo.findOne({ where: { name: interaction.member.user.username }});
-            await interaction.reply({ content: userdesc.get("description") });
-        } catch (error) {
-            console.log(error)
-        }
-    } else if (icommand === 'profile') { //add dev to end when devving
-        try {
-            let profilebal = await baloncesto.findOne({ where: { name: interaction.user.username }});
-            let profiledesc = await userinfo.findOne({ where: { name: interaction.user.username }});
-            let profileDisplay = new Discord.MessageEmbed()
-                .addFields(
-                    { name: "Balance", value: `${profilebal.balance} coins` },
-                    { name: "Description", value: profiledesc.description}
-                );
-                await interaction.reply({ embeds: [profileDisplay], ephemeral: true });
-        } catch (error) {
-            console.log(error)
-        }
-    }*/
 
     try {
         const commandExists = client.commands.get(interaction.commandName);
