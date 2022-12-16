@@ -1,8 +1,23 @@
+const load_start = Date.now();
+
 const { Collection, Client, GatewayIntentBits, REST, Events, PresenceUpdateStatus, ActivityType, EmbedBuilder, Routes } = require('discord.js');
 require('dotenv').config();
 const { clientIds, dev } = require('./config.json');
+const { effect } = require('./colors');
 const fs = require('node:fs');
 const path = require('node:path');
+
+console.logDate = function(...args) {
+    console.log(`${new Date().toUTCString()} |`, ...args)
+}
+
+console.warnDate = function(...args) {
+    console.warn(`${new Date().toUTCString()} |`, ...args)
+}
+
+console.errorDate = function(...args) {
+    console.error(`${new Date().toUTCString()} |`, ...args)
+}
 
 const client = new Client({
     intents: [
@@ -13,22 +28,26 @@ const client = new Client({
     ],
 });
 
-console.log(`${Date.now()} | Running ${dev ? 'dev' : 'official'} bot\n\n`);
+console.log('Bot Version:');
+console.log('------------');
+console.logDate(`Running ${dev ? effect('dev', 'BRIGHT_YELLOW') : effect('official', 'BRIGHT_BLUE')} bot\n\n`);
 
 client.commands = new Collection();
 const commands = [];
 const commandPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandPath).filter(file => file.endsWith('.js'));
 
+console.log('Command Discovery');
+console.log('-----------------');
 for (const file of commandFiles) {
     const command = require(path.join(commandPath, file));
 
     if ('data' in command && 'execute' in command) {
-        console.log(`${Date.now()} | ${command.data.name} is being added to list of commands...`);
+        console.logDate(`${effect(`${command.data.name} is being added to list of commands...`, 'BRIGHT_GREEN')}`);
         client.commands.set(command.data.name, command);
         commands.push(command.data.toJSON());
     } else {
-        console.warn(`${Date.now()} | Command at path ${path.join(commandPath, file)} is missing 'data' or 'execute' field. This command might not work correctly.`);
+        console.warnDate(`${effect(`Command at path ${path.join(commandPath, file)} is missing 'data' or 'execute' field. This command might not work correctly.`, 'BRIGHT_RED')}`);
     }
 }
 
@@ -42,25 +61,27 @@ if (dev) {
     rest = new REST({ version: '10' }).setToken(process.env.official_token);
 }
 
+console.log('Command Registering');
+console.log('-------------------');
 (async () => {
     try {
         if (dev) {
-            console.log(`${Date.now()} | Started updating application (/) commands for dev bot`);
+            console.logDate(`${effect(`Started updating application (/) commands for dev bot`, 'BRIGHT_YELLOW')}`);
             await rest.put(
                 Routes.applicationCommands(clientIds.dev),
                 { body: commands }
             );
         } else {
-            console.log(`${Date.now()} | Started updating application (/) commands for official bot`);
+            console.logDate(`${effect(`Started updating application (/) commands for official bot`, 'BRIGHT_BLUE')}`);
             await rest.put(
                 Routes.applicationCommands(clientIds.official),
                 { body: commands }
             );
         }
 
-        console.log(`${Date.now()} | Successfully updated application (/) commands!\n`);
+        console.logDate(`${effect(`Successfully updated application (/) commands! Registered commands in ${effect(Date.now() - load_start, 'BRIGHT_CYAN')} ${effect('ms', 'BRIGHT_GREEN')}`, 'BRIGHT_GREEN')}`);
     } catch (error) {
-        console.error(`${Date.now()} | ${error}\n`);
+        console.errorDate(`${effect(`${error}`, 'BRIGHT_RED')}\n`);
     }
 })();
 
@@ -68,7 +89,7 @@ const cooldowns = new Collection();
 
 client.once(Events.ClientReady, async () => {
     client.user.setPresence({ status: PresenceUpdateStatus.Online, activities: [{ name: 'CodeMyGame code me', type: ActivityType.Watching }] })
-    console.log(`${Date.now()} | Bot is ready!`);
+    console.logDate(`${effect(`Bot is ready! Loaded in ${effect(Date.now() - load_start, 'BRIGHT_CYAN')}`, 'BRIGHT_GREEN')} ${effect('ms', 'BRIGHT_GREEN')}`);
 });
 
 client.on(Events.InteractionCreate, async interaction => {

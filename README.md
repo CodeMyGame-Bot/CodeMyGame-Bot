@@ -12,8 +12,9 @@ Welcome to the official repository for CodeMyGame Bot, which runs on discord.js 
 - [ ] fix (/help)
 
 ## TASKS
-- [ ] change version number in `config.json` and `package.json`; rebuild using `npm install` each time
-- [ ] update /devlook to display first five features i'm working on
+- change version number in `package.json`; rebuild using `npm install` each time
+- update /devlook to display first five features i'm working on
+- colorize console output
 
 ## UNNECESSARY:
 <!-- /*
