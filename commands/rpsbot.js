@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, EmbedBuilder } = require('discord.js');
 const Discord = require('discord.js');
 
 const choices = ["rock", "paper", "scissors"];
@@ -54,14 +54,32 @@ module.exports = {
         const collector = interaction.channel.createMessageComponentCollector({ filter, time: 10000, componentType: ComponentType.Button, max: 1 });
         
         collector.on('collect', async i => {
+            const rpsEmbed = new EmbedBuilder();
             if (i.customId === comp_choice) {
-                await i.update({ content: `It's a tie! You both chose ${comp_choice}`, components: [] });
+                rpsEmbed
+                    .setTitle('It\'s a tie!')
+                    .setColor([255, 255, 0])
+                    .setDescription(`I also chose ${comp_choice}`);
+                // await i.update({ content: `It's a tie! You both chose ${comp_choice}`, components: [] });
             } else {
-                await i.update({ content: `${calc_rps_win({
+                const win_info = calc_rps_win({
                     'user': i.customId,
                     'computer': comp_choice
-                })}\nYou chose ${i.customId}, and I chose ${comp_choice}`, components: [] });
+                });
+                rpsEmbed
+                    .setTitle(win_info)
+                    .setColor(win_info === 'You won!' ? [0, 255, 0] : [255, 0, 0])
+                    .addFields(
+                        { name: 'You chose', value: i.customId },
+                        { name: 'I chose', value: comp_choice }
+                    );
+                // await i.update({ content: `${calc_rps_win({
+                //     'user': i.customId,
+                //     'computer': comp_choice
+                // })}\nYou chose ${i.customId}, and I chose ${comp_choice}`, components: [] });
             }
+            
+            await i.update({ content: '', embeds: [rpsEmbed], components: [] })
         });
     }
 }

@@ -1,8 +1,12 @@
 const load_start = Date.now();
 
+let args = process.argv.slice(2);
+
+let dev = parseInt(args[0], 10);
+
 const { Collection, Client, GatewayIntentBits, REST, Events, PresenceUpdateStatus, ActivityType, EmbedBuilder, Routes } = require('discord.js');
 require('dotenv').config();
-const { clientIds, dev } = require('./config.json');
+const { clientIds } = require('./config.json');
 const { effect } = require('./colors');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -30,12 +34,15 @@ const client = new Client({
 
 console.log('Bot Version:');
 console.log('------------');
-console.logDate(`Running ${dev ? effect('dev', 'BRIGHT_YELLOW') : effect('official', 'BRIGHT_BLUE')} bot\n\n`);
+console.logDate(`Running ${dev ? effect('dev', 'BRIGHT_YELLOW') : effect('official', 'BRIGHT_BLUE')} bot`);
+console.logDate(`Running bot version ${process.env.npm_package_version}`);
 
 client.commands = new Collection();
 const commands = [];
 const commandPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandPath).filter(file => file.endsWith('.js'));
+
+console.log();
 
 console.log('Command Discovery');
 console.log('-----------------');
@@ -90,6 +97,7 @@ const cooldowns = new Collection();
 client.once(Events.ClientReady, async () => {
     client.user.setPresence({ status: PresenceUpdateStatus.Online, activities: [{ name: 'CodeMyGame code me', type: ActivityType.Watching }] })
     console.logDate(`${effect(`Bot is ready! Loaded in ${effect(Date.now() - load_start, 'BRIGHT_CYAN')}`, 'BRIGHT_GREEN')} ${effect('ms', 'BRIGHT_GREEN')}`);
+    // console.logDate(`Bot is in the following guilds: ${effect(client.guilds.cache.map((guild) => guild.name), 'BRIGHT_BLUE')}`);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
