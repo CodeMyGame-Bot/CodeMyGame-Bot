@@ -1,7 +1,7 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder } = require('discord.js');
 
 const hex_to_bin = hex => (parseInt(hex, 16).toString(2)).padStart((4 * hex.length), '0');
-const hex_test = /^[0-9A-F]+?$/
+const hex_test = /^[0-9A-F]+?$/;
 
 module.exports = {
     data: new SlashCommandBuilder()

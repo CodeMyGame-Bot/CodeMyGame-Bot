@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, EmbedBuilder } = require('discord.js');
 const Discord = require('discord.js');
 
-const choices = ["rock", "paper", "scissors"];
+const choices = ['rock', 'paper', 'scissors'];
 
 const rps_row = new ActionRowBuilder()
     .addComponents(
@@ -60,7 +60,6 @@ module.exports = {
                     .setTitle('It\'s a tie!')
                     .setColor([255, 255, 0])
                     .setDescription(`I also chose ${comp_choice}`);
-                // await i.update({ content: `It's a tie! You both chose ${comp_choice}`, components: [] });
             } else {
                 const win_info = calc_rps_win({
                     'user': i.customId,
@@ -73,13 +72,9 @@ module.exports = {
                         { name: 'You chose', value: i.customId },
                         { name: 'I chose', value: comp_choice }
                     );
-                // await i.update({ content: `${calc_rps_win({
-                //     'user': i.customId,
-                //     'computer': comp_choice
-                // })}\nYou chose ${i.customId}, and I chose ${comp_choice}`, components: [] });
             }
             
-            await i.update({ content: '', embeds: [rpsEmbed], components: [] })
+            await i.update({ content: '', embeds: [rpsEmbed], components: [] });
         });
     }
 }

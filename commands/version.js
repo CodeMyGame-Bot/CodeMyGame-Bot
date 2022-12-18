@@ -3,7 +3,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 let versionEmbed = new EmbedBuilder()
     .addFields(
-        { name: "Version", value: process.env.npm_package_version }
+        { name: 'Version', value: process.env.npm_package_version }
     );
 
 module.exports = {

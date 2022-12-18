@@ -21,7 +21,7 @@ module.exports = {
         Min limit: 0 (by default)\n
 Max limit: ${interaction.options.get('max').value}\n
 Random number: ${Math.floor(Math.random() * interaction.options.get('max').value, 10)}`;
+
         await interaction.reply({ content: therandomstring, ephemeral: true });
-        
     }
 }

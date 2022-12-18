@@ -40,11 +40,11 @@ module.exports = {
         const collector = interaction.channel.createMessageComponentCollector({ filter, time: 20000, componentType: ComponentType.Button });
 
         async function checkGuess(i) {
-            if (!i.isModalSubmit()) return;
+            if (!i.isModalSubmit() && i.customId !== 'quiz-modal') return;
 
-            const user_guess = Number.parseInt(i.fields.getTextInputValue('quiz-guess'));
+            const user_guess = parseInt(i.fields.getTextInputValue('quiz-guess'), 10);
             if (user_guess === NaN) {
-                await i.reply({ content: 'You didn\'t enter a number!'});
+                await i.reply({ content: 'You didn\'t enter a number!', ephemeral: true });
             } else if (user_guess !== answer) {
                 await i.reply({ content: `Sorry, ${user_guess} is not the right answer`, ephemeral: true });
             } else {
@@ -64,7 +64,7 @@ module.exports = {
 
             if (collected.size === 0) { // if nobody responded
                 await interaction.editReply({ content: `Nobody responded to the quiz :(`, components: [] });
-            } else if (reason == 'time') { // if ppl responded but it timed out without being ended on line 47 
+            } else if (reason == 'time') { // if ppl responded but nobody tripped the collector.stop (they got the right answer)
                 await interaction.editReply({ content: `Sorry. Nobody guessed the sum of ${num1} and ${num2} (which was ${answer}). Good job to everybody who tried, though!` });
             } else { // somebody got it correct
                 await interaction.editReply({ content: `Congratulations to ${userMention(reason)} for correctly guessing ${answer} as the sum of ${num1} and ${num2}!`, components: [] });

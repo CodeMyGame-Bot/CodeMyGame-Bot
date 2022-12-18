@@ -40,10 +40,13 @@ module.exports = {
         let start = new Date().toUTCString();
 
         for (let x = 0; x < bars + 1; x++) {
-            progresso = "[" + "#".repeat(x) + "-".repeat(bars - x) + "]";
+            progresso = '[' + '#'.repeat(x) + '-'.repeat(bars - x) + ']';
+            
             progressEmbed.setDescription(progresso);
             progressEmbed.setFooter({ text: `${Number.parseFloat((x / bars) * 100).toFixed(1)}% ${loader}` });
+            
             loader = nextState(loader);
+            
             await interaction.editReply({ embeds: [progressEmbed] })
             await new Promise(r => setTimeout(r, timer));
         }
@@ -51,6 +54,7 @@ module.exports = {
         let end = new Date().toUTCString();
         
         progressEmbed.setFooter({ text: `Started progress bar on ${start}\nCompleted progress bar on ${end}` });
+        
         await interaction.editReply({ embeds: [progressEmbed] });
     }
 }

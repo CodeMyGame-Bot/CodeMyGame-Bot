@@ -1,28 +1,15 @@
 # CodeMyGame Bot
-Welcome to the official repository for CodeMyGame Bot, which runs on discord.js v14
+Welcome to the official repository for CodeMyGame Bot, which runs on Discord.js v14.
 
-## DEV REQUIREMENTS
-- make sure token, prefix ("dev="), and dev ("true") are set in the .env file
+# Dependencies (refer to [package.json](package.json))
+- discord.js
+- dotenv
 
-## PROD REQUIREMENTS
-- push to github
+# Bot-Wide Policies
+- Bot maintainers must follow a few simple guidelines, outlined in [POLICIES.md](POLICIES.md)
 
-## VERY IMPORTANT STUFF
-- [x] fix (/rps)
-- [ ] fix (/help)
+# Excluded Files
+- For a list of files not included in this repository that are vital to the operation of the bot (for example, environment secrets), refer to the repository [.gitignore](.gitignore)
 
-## TASKS
-- change version number in `package.json`; rebuild using `npm install` each time
-- update /devlook to display first five features i'm working on
-- colorize console output
-
-## UNNECESSARY:
-<!-- /*
-* unnecessary dependencies for now
-- "chalk": "^4.1.1",
-        "ffmpeg-static": "^4.4.0",
-        "libsodium-wrappers": "^0.7.9",
-        "sequelize": "^6.6.5",
-        "sqlite3": "^4.2.0"
-
-*/ -->
+# Contributing
+- If you would like to submit pull requests, commit code, or raise issues on this repository, please refer to the repository's [CONTRIBUTING.md](CONTRIBUTING.md)

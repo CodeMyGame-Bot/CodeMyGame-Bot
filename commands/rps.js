@@ -1,6 +1,6 @@
-const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, userMention, ComponentType, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, userMention, ComponentType, EmbedBuilder } = require('discord.js');
 
-const choices = ["rock", "paper", "scissors"];
+const choices = ['rock', 'paper', 'scissors'];
 
 const confirm_play = new ActionRowBuilder()
     .addComponents(

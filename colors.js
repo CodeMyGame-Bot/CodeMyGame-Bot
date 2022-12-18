@@ -1,8 +1,5 @@
 const ESC = '\x1b';
 const RESET_STR = `${ESC}[0m`;
-const FORMAT_STR = `${ESC}[%sm`;
-const RGB_FORMAT = `${ESC}[38;%sm`;
-const RGB_BACK_FORMAT = `${ESC}[48;%sm`;
 const COLORS = {
     'RED': 31,
     'GREEN': 32,
@@ -21,7 +18,7 @@ const COLORS = {
     'BRIGHT_WHITE': 97
 };
 
-const reset = (string) => `${string}${ESC}[0m`;
+const reset = (string) => `${string}${RESET_STR}`;
 const code = (ansi_code) => `${ESC}[${ansi_code}m`;
 const rgb_code = (rgb_code) => `${ESC}[38;${rgb_code}m`;
 const rgb_back_code = (rgb_code) => `${ESC}[48;${rgb_code}m`;

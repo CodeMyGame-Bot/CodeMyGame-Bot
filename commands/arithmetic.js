@@ -5,7 +5,7 @@ const operators = {
     'subtract': '-',
     'multiply': '*',
     'divide': '/'
-}
+};
 
 const isString = (val) => typeof val == 'string' || val instanceof String;
 
@@ -78,22 +78,6 @@ module.exports = {
                                 .setDescription('The second value to multiply!')
                                 .setRequired(true)
                         )
-                        // .addIntegerOption(option =>
-                        //     option
-                        //         .setName('num1')
-                        //         .setDescription('The first number to multiply (multiplicand)')
-                        //         .setMinValue(-Number.MAX_SAFE_INTEGER)
-                        //         .setMaxValue(Number.MAX_SAFE_INTEGER)
-                        //         .setRequired(true)
-                        // )
-                        // .addIntegerOption(option =>
-                        //     option
-                        //         .setName('num2')
-                        //         .setDescription('The number to multiply with the first number (multiplier)')
-                        //         .setMinValue(-Number.MAX_SAFE_INTEGER)
-                        //         .setMaxValue(Number.MAX_SAFE_INTEGER)
-                        //         .setRequired(true)
-                        // )
                 )
                 .addSubcommand(subcommand =>
                     subcommand
@@ -177,15 +161,13 @@ module.exports = {
         switch (interaction.options.getSubcommandGroup()) {
             case 'arithmetic':
                 let result;
-                let reply;
+                let reply = `${interaction.options.getString('num1')} ${operators[interaction.options.getSubcommand()]} ${interaction.options.getString('num2')} = `;
                 switch (interaction.options.getSubcommand()) {
                     case 'add':
                         result = interaction.options.getInteger('num1') + interaction.options.getInteger('num2');
-                        reply = `${interaction.options.getInteger('num1')} ${operators[interaction.options.getSubcommand()]} ${interaction.options.getInteger('num2')} = `;
                         break;
                     case 'subtract':
                         result = interaction.options.getInteger('num1') - interaction.options.getInteger('num2');
-                        reply = `${interaction.options.getInteger('num1')} ${operators[interaction.options.getSubcommand()]} ${interaction.options.getInteger('num2')} = `;
                         break;
                     case 'multiply':
                         let num1 = interaction.options.getString('num1');
@@ -195,7 +177,7 @@ module.exports = {
                         num2 = isNaN(num2) ? num2 : parseInt(num2, 10);
                         
                         if (!isString(num1) && !isString(num2)) {
-                            result = num1 * num2
+                            result = num1 * num2;
                         } else if (isString(num1) && isString(num2)) {
                             return await interaction.reply('Both values can\'t be strings!');
                         } else if (isString(num1)) {
@@ -210,15 +192,12 @@ module.exports = {
                             result = num2.repeat(num1);
                         }
 
-                        // result = interaction.options.getInteger('num1') * interaction.options.getInteger('num2');
-                        reply = `${interaction.options.getString('num1')} ${operators[interaction.options.getSubcommand()]} ${interaction.options.getString('num2')} = `;
                         break;
                     case 'divide':
                         if (interaction.options.getInteger('num2') == 0) {
                             return await interaction.reply({ content: 'You can\'t divide by zero!', ephemeral: true });
                         }
                         result = interaction.options.getInteger('num1') / interaction.options.getInteger('num2');
-                        reply = `${interaction.options.getInteger('num1')} ${operators[interaction.options.getSubcommand()]} ${interaction.options.getInteger('num2')} = `;
                         break;
                 }
 
@@ -231,8 +210,8 @@ module.exports = {
                         await interaction.reply(`The area of a triangle with base ${interaction.options.getInteger('base')} and height ${interaction.options.getInteger('height')} is ${area} units squared`);
                         break;
                     case 'area_circle':
-                        area = Math.PI * (interaction.options.getInteger('radius') ** 2)
-                        await interaction.reply(`The area of a circle with radius ${interaction.options.getInteger('radius')} is ${area} units squared`)
+                        area = Math.PI * (interaction.options.getInteger('radius') ** 2);
+                        await interaction.reply(`The area of a circle with radius ${interaction.options.getInteger('radius')} is ${area} units squared`);
                         break;
                     case 'circumference':
                         if (interaction.options.getInteger('radius') && interaction.options.getInteger('diameter')) {
