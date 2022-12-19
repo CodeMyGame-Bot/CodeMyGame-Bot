@@ -25,6 +25,6 @@ module.exports = {
                 'iconURL': client.application.owner.displayAvatarURL()
             });
         }
-        await interaction.reply({ embeds: [devlookembed], ephemeral: true });
+        await interaction.reply({ embeds: [devlookembed] });
     }
 }

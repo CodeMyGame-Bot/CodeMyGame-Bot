@@ -1,5 +1,7 @@
 const { SlashCommandBuilder, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, ActionRow, ButtonBuilder, ButtonStyle, ComponentType, Events, userMention } = require('discord.js');
 
+const guess_time = 30;
+
 const showQuizModal = new ActionRowBuilder()
     .addComponents(
         new ButtonBuilder()
@@ -34,10 +36,10 @@ module.exports = {
                     )
             );
         
-        await interaction.reply({ content: 'FLASH QUIZ (everyone has 20 seconds to guess)', components: [showQuizModal] });
+        await interaction.reply({ content: `FLASH QUIZ (everyone has ${guess_time} seconds to guess)`, components: [showQuizModal] });
 
-        const filter = i => (i.customId == 'show-quiz-modal');
-        const collector = interaction.channel.createMessageComponentCollector({ filter, time: 20000, componentType: ComponentType.Button });
+        const filter = i => i.customId === 'show-quiz-modal';
+        const collector = interaction.channel.createMessageComponentCollector({ filter, time: guess_time * 10000, componentType: ComponentType.Button });
 
         async function checkGuess(i) {
             if (!i.isModalSubmit() && i.customId !== 'quiz-modal') return;
@@ -64,7 +66,7 @@ module.exports = {
 
             if (collected.size === 0) { // if nobody responded
                 await interaction.editReply({ content: `Nobody responded to the quiz :(`, components: [] });
-            } else if (reason == 'time') { // if ppl responded but nobody tripped the collector.stop (they got the right answer)
+            } else if (reason === 'time') { // if ppl responded but nobody tripped the collector.stop (they got the right answer)
                 await interaction.editReply({ content: `Sorry. Nobody guessed the sum of ${num1} and ${num2} (which was ${answer}). Good job to everybody who tried, though!` });
             } else { // somebody got it correct
                 await interaction.editReply({ content: `Congratulations to ${userMention(reason)} for correctly guessing ${answer} as the sum of ${num1} and ${num2}!`, components: [] });

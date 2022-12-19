@@ -7,6 +7,6 @@ module.exports = {
     category: 'utility',
     cooldown: 10,
     async execute(interaction) {
-        await interaction.reply({ content: 'Yeah most people code this is definitely coding haha ok i\'ll stop', ephemeral: true });
+        await interaction.reply({ content: 'Yeah most people code this is definitely coding haha ok i\'ll stop' });
     }
 }

@@ -3,6 +3,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { effect } = require('../colors');
 
+const wait_time = 60;
+const idle_time = 15;
+
 // archived: 'fun', 'currency', 'profile'
 const CommandHelpInfo = {
     'utility': {
@@ -12,7 +15,7 @@ const CommandHelpInfo = {
         'embed': new EmbedBuilder()
             .setTitle(`Utility Help`)
             .setDescription('Various random utility commands that might be useful!')
-            .setFooter({ text: '**This embed will expire in 15 seconds**'})
+            .setFooter({ text: `**This embed will expire in ${wait_time} seconds**`})
     },
     'minigames': {
         'id': 'minigames',
@@ -21,7 +24,7 @@ const CommandHelpInfo = {
         'embed': new EmbedBuilder()
             .setTitle(`Minigames Help`)
             .setDescription('A collection of minigames you\'re sure to enjoy!')
-            .setFooter({ text: '**This embed will expire in 15 seconds**'})
+            .setFooter({ text: `**This embed will expire in ${wait_time} seconds**`})
     },
     'home': {
         'id': 'home',
@@ -42,7 +45,7 @@ CommandHelpInfo.home.embed = new EmbedBuilder()
         { name: 'Home', value: 'Return to this embed once you\'re in another embed with the Home button'}
     )
     .setDescription(CommandHelpInfo.home.description)
-    .setFooter({ text: '**This embed will expire in 15 seconds**'});
+    .setFooter({ text: `**This embed will expire in ${wait_time} seconds**`});
 
 let commandPath = path.join(__dirname, '..', 'commands');
 const commandFiles = fs.readdirSync(commandPath).filter(file => file.endsWith('js') && file !== 'help.js');
@@ -89,11 +92,11 @@ module.exports = {
                 helpSelect
             );
         
-        await interaction.reply({ embeds: [CommandHelpInfo.home.embed], components: [helpRow], ephemeral: true });
+        await interaction.reply({ embeds: [CommandHelpInfo.home.embed], components: [helpRow] });
 
-        const filter = i => i.user.id == interaction.user.id;
+        const filter = i => i.user.id === interaction.user.id;
         const helpCollector = interaction.channel.createMessageComponentCollector({ 
-            filter, time: 15000, idle: 10000,
+            filter, time: wait_time * 1000, idle: idle_time * 1000,
             componentType: ComponentType.StringSelect
         });
 

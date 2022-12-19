@@ -1,5 +1,8 @@
 const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, userMention, ComponentType, EmbedBuilder } = require('discord.js');
 
+const prompt_timeout = 10;
+const play_time = 15;
+
 const choices = ['rock', 'paper', 'scissors'];
 
 const confirm_play = new ActionRowBuilder()
@@ -33,10 +36,10 @@ const rps_row = new ActionRowBuilder()
 async function rps_game(interaction, button, opponent) {
     let user_choice = opponent_choice = null;
 
-    await button.update({ content: `${userMention(interaction.user.id)} and ${userMention(opponent.id)}, enter your choices. You have 15 seconds`, components: [rps_row] });
+    await button.update({ content: `${userMention(interaction.user.id)} and ${userMention(opponent.id)}, enter your choices. You have ${play_time} seconds`, components: [rps_row] });
 
     const filter = i => ([interaction.user.id, opponent.id].includes(i.user.id) && choices.includes(i.customId));
-    const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000, componentType: ComponentType.Button });
+    const collector = interaction.channel.createMessageComponentCollector({ filter, time: play_time * 1000, componentType: ComponentType.Button });
     
     collector.on('collect', async i => {
         if (i.user.id === interaction.user.id) {
@@ -61,7 +64,7 @@ async function rps_game(interaction, button, opponent) {
     });
 
     collector.on('end', async (collected, reason) => { 
-        if (reason == 'time') {
+        if (reason === 'time') {
             await interaction.editReply({ content: 'Both players didn\'t respond in time', components: [] });
         } else {
             const game_info = {
@@ -110,7 +113,7 @@ const rps_win = {
 
 // wraps rps_win in a function
 const calc_rps_win = results => // user's choice and opponent's choice
-    (results.user.choice == results.opponent.choice // if user's choice equals opponent's choice
+    (results.user.choice === results.opponent.choice // if user's choice equals opponent's choice
         ? 'It\'s a tie!' // it's a tie
         : rps_win[results.user.choice][results.opponent.choice] // otherwise, return whether the user or opponent won
     );
@@ -134,10 +137,10 @@ module.exports = {
            return await interaction.reply({ content: 'You have to play rock, paper, scissors with another **user**, not a *bot*...', ephemeral: true });
         }
 
-        await interaction.reply({ content: `${userMention(opponent.id)}, would you like to play Rock, Paper, Scissors with ${userMention(interaction.user.id)}? This message will time out in 10 seconds`, components: [confirm_play] });
+        await interaction.reply({ content: `${userMention(opponent.id)}, would you like to play Rock, Paper, Scissors with ${userMention(interaction.user.id)}? This message will time out in ${prompt_timeout} seconds`, components: [confirm_play] });
         
-        const filter = i => (i.user.id == opponent.id) && (['accept', 'deny'].includes(i.customId));
-        const collector = interaction.channel.createMessageComponentCollector({ filter, time: 10000, componentType: ComponentType.Button, max: 1 });
+        const filter = i => i.user.id === opponent.id && ['accept', 'deny'].includes(i.customId);
+        const collector = interaction.channel.createMessageComponentCollector({ filter, time: prompt_timeout * 1000, componentType: ComponentType.Button, max: 1 });
 
         collector.on('collect', async i => {
             if (i.customId === 'accept') {

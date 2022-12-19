@@ -15,13 +15,13 @@ module.exports = {
     category: 'utility',
     cooldown: 10,
     async execute(interaction) {
-        // check if min is > max; if min == max, return min/max instead of doing math.random
+        // check if min is > max; if min === max, return min/max instead of doing math.random
 
         let therandomstring = `
         Min limit: 0 (by default)\n
 Max limit: ${interaction.options.get('max').value}\n
 Random number: ${Math.floor(Math.random() * interaction.options.get('max').value, 10)}`;
 
-        await interaction.reply({ content: therandomstring, ephemeral: true });
+        await interaction.reply({ content: therandomstring });
     }
 }

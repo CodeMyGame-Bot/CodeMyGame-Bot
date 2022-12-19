@@ -7,7 +7,7 @@ const operators = {
     'divide': '/'
 };
 
-const isString = (val) => typeof val == 'string' || val instanceof String;
+const isString = (val) => typeof val === 'string' || val instanceof String;
 
 module.exports = {
     description: 'Random math functions!',
@@ -161,9 +161,10 @@ module.exports = {
         switch (interaction.options.getSubcommandGroup()) {
             case 'arithmetic':
                 let result;
-                let reply = `${interaction.options.getString('num1')} ${operators[interaction.options.getSubcommand()]} ${interaction.options.getString('num2')} = `;
+                let reply = `${interaction.options.get('num1').value} ${operators[interaction.options.getSubcommand()]} ${interaction.options.get('num2').value} = `;
                 switch (interaction.options.getSubcommand()) {
                     case 'add':
+                        console.log(interaction.options.get(''))
                         result = interaction.options.getInteger('num1') + interaction.options.getInteger('num2');
                         break;
                     case 'subtract':
@@ -194,7 +195,7 @@ module.exports = {
 
                         break;
                     case 'divide':
-                        if (interaction.options.getInteger('num2') == 0) {
+                        if (interaction.options.getInteger('num2') === 0) {
                             return await interaction.reply({ content: 'You can\'t divide by zero!', ephemeral: true });
                         }
                         result = interaction.options.getInteger('num1') / interaction.options.getInteger('num2');

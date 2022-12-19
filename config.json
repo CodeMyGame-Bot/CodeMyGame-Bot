@@ -3,5 +3,33 @@
         "official": "734539944659517591",
         "dev": "812153361427988544"    
     },
+    "guildIds": {
+        "supportServer": "766063242194845746"
+    },
+    "presenceInfo": {
+        "status": "Online",
+        "presences": [
+            {
+                "type": "Watching",
+                "name": "CodeMyGame code me"
+            },
+            {
+                "type": "Watching",
+                "name": "you as you sleep"
+            },
+            {
+                "type": "Watching",
+                "name": "some good ol' YouTube"
+            },
+            {
+                "type": "Watching",
+                "name": "guilds"
+            },
+            {
+                "type:": "Watching",
+                "name": "your hopes and dreams"
+            }
+        ]
+    },
     "dev": false
 }

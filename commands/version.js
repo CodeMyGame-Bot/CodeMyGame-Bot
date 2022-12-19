@@ -1,4 +1,3 @@
-const { version } = require('../config.json')
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 let versionEmbed = new EmbedBuilder()
@@ -13,6 +12,6 @@ module.exports = {
     category: 'utility',
     cooldown: 10,
     async execute(interaction) {
-        await interaction.reply({ embeds: [versionEmbed], ephemeral: true });
+        await interaction.reply({ embeds: [versionEmbed] });
     }
 }

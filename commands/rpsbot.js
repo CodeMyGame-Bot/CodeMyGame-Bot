@@ -38,7 +38,7 @@ const rps_win = {
 };
 
 // wraps rps_win in a function
-const calc_rps_win = choices => (choices.user == choices.computer ? 'It\'s a tie!' : rps_win[choices.user][choices.computer]);
+const calc_rps_win = choices => (choices.user === choices.computer ? 'It\'s a tie!' : rps_win[choices.user][choices.computer]);
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -50,7 +50,7 @@ module.exports = {
         let comp_choice = choices[Math.floor(Math.random() * choices.length)];
         await interaction.reply({ content: 'I\'ve selected my choice. Now you choose! You have 10 seconds', components: [rps_row] });
         
-        const filter = i => choices.includes(i.customId) && (i.user.id == interaction.user.id);
+        const filter = i => choices.includes(i.customId) && i.user.id === interaction.user.id;
         const collector = interaction.channel.createMessageComponentCollector({ filter, time: 10000, componentType: ComponentType.Button, max: 1 });
         
         collector.on('collect', async i => {

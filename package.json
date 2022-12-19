@@ -1,6 +1,6 @@
 {
     "name": "codemygame-bot",
-    "version": "0.2.5",
+    "version": "0.2.6",
     "description": "CodeMyGame's official Discord bot!",
     "main": "index.js",
     "scripts": {
