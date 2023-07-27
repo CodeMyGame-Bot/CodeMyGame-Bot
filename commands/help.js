@@ -67,11 +67,12 @@ for (const file of commandFiles) {
 }
 
 module.exports = {
+    category: 'utility',
+    type: 'interactive',
+    cooldown: 20,
     data: new SlashCommandBuilder()
         .setName('help')
         .setDescription('Help with the bot\'s commands!'),
-    cooldown: 20,
-    category: 'utility',
     async execute(interaction, client) {
         const helpSelect = new StringSelectMenuBuilder()
             .setCustomId('help')

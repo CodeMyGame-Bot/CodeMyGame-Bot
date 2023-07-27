@@ -1,6 +1,9 @@
 const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
+    category: 'utility',
+    type: 'instant',
+    cooldown: 10,
     data: new SlashCommandBuilder()
         .setName('random')
         .setDescription('Returns a random number!')
@@ -12,8 +15,6 @@ module.exports = {
                 .setMaxValue(Number.MAX_SAFE_INTEGER)
                 .setRequired(true)
         ),
-    category: 'utility',
-    cooldown: 10,
     async execute(interaction) {
         // check if min is > max; if min === max, return min/max instead of doing math.random
 

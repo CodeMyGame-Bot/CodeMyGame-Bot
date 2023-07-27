@@ -26,6 +26,9 @@ const answers = ['As I see it, yes.',
     'You may rely on it.'];
 
 module.exports = {
+    category: 'minigames',
+    type: 'instant',
+    cooldown: 10,
     data: new SlashCommandBuilder()
         .setName('eightball')
         .setDescription('Enter a question that the 8-Ball can answer (don\'t take the bot\'s answer seriously!)')
@@ -36,8 +39,6 @@ module.exports = {
                 .setMaxLength(1000)
                 .setRequired(true)
         ),
-    category: 'minigames',
-    cooldown: 10,
     async execute(interaction) {
         await interaction.reply({ content: 'Wrote your question? Thought about it? Okay... one second.', ephemeral: true });
         await new Promise(r => setTimeout(r, 2000));

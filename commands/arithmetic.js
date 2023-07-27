@@ -10,8 +10,8 @@ const operators = {
 const isString = (val) => typeof val === 'string' || val instanceof String;
 
 module.exports = {
-    description: 'Random math functions!',
     category: 'utility',
+    type: 'instant',
     cooldown: 10,
     data: new SlashCommandBuilder()
         .setName('math')

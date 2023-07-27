@@ -11,11 +11,12 @@ const showQuizModal = new ActionRowBuilder()
     )
 
 module.exports = {
+    category: 'minigames',
+    type: 'instant',
+    cooldown: 60,
     data: new SlashCommandBuilder()
         .setName('quiz')
         .setDescription('Poses an arithmetic question to everyone in the channel!'),
-    category: 'minigames',
-    cooldown: 60,
     async execute(interaction, client) {
         let num1 = Math.ceil(Math.random() * 100);
         let num2 = Math.ceil(Math.random() * 100);

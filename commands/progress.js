@@ -5,6 +5,9 @@ let loader_states = ['-', '\\', '|', '/'];
 let nextState = currState => loader_states[(loader_states.indexOf(currState) + 1) % loader_states.length];
 
 module.exports = {
+    category: 'utility',
+    type: 'instant', 
+    cooldown: 60,
     data: new SlashCommandBuilder()
         .setName('progress')
         .setDescription('Make a progress bar! (might not be time-accurate due to network limits)')
@@ -24,8 +27,6 @@ module.exports = {
                 .setMaxValue(1000)
                 .setRequired(true)
         ),
-    category: 'utility',
-    cooldown: 60,
     async execute(interaction) {
         let [bars, timer] = [interaction.options.getInteger('bars'), interaction.options.getInteger('time')];
         let progresso = ' ';

@@ -2,8 +2,4 @@
 *.m4a
 *.env
 node_modules
-BULLETIN_BOARD.md
 archived_commands
-templates
-database.sqlite
-package-lock.json

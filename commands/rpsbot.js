@@ -41,11 +41,12 @@ const rps_win = {
 const calc_rps_win = choices => (choices.user === choices.computer ? 'It\'s a tie!' : rps_win[choices.user][choices.computer]);
 
 module.exports = {
+    category: 'minigames',
+    type: 'instant',
+    cooldown: 10,
     data: new SlashCommandBuilder()
         .setName('rps-bot')
         .setDescription('Play rock, paper, scissors with the bot!'),
-    category: 'minigames',
-    cooldown: 10,
     async execute(interaction) {
         let comp_choice = choices[Math.floor(Math.random() * choices.length)];
         await interaction.reply({ content: 'I\'ve selected my choice. Now you choose! You have 10 seconds', components: [rps_row] });

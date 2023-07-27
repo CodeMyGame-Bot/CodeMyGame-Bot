@@ -119,6 +119,9 @@ const calc_rps_win = results => // user's choice and opponent's choice
     );
 
 module.exports = {
+    category: 'minigames',
+    type: 'instant',
+    cooldown: 60,
     data: new SlashCommandBuilder()
         .setName('rps')
         .setDescription('Play rock, paper, scissors with another user!')
@@ -128,8 +131,6 @@ module.exports = {
                 .setDescription('Who you\'re playing against!')
                 .setRequired(true)
         ),
-    category: 'minigames',
-    cooldown: 60,
     async execute(interaction) {
         const opponent = interaction.options.getUser('opponent');
 

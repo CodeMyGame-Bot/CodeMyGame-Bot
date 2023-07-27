@@ -22,11 +22,12 @@ const invite_row = new ActionRowBuilder()
     );
 
 module.exports = {
+    category: 'utility',
+    type: 'instant',
+    cooldown: 10,
     data: new SlashCommandBuilder()
         .setName('invite')
         .setDescription('Get a custom invite to add the bot to your servers!'),
-    category: 'utility',
-    cooldown: 10,
     async execute(interaction) {
         await interaction.reply({ components: [invite_row] });
     }

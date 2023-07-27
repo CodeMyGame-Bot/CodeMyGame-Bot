@@ -6,6 +6,10 @@
     "guildIds": {
         "supportServer": "766063242194845746"
     },
+    "botStatus": {
+        "official": "780158293200863283",
+        "dev": "766063606823125014"
+    },
     "presenceInfo": {
         "status": "Online",
         "presences": [

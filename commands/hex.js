@@ -4,6 +4,9 @@ const hex_to_bin = hex => (parseInt(hex, 16).toString(2)).padStart((4 * hex.leng
 const hex_test = /^[0-9A-F]+?$/;
 
 module.exports = {
+    category: 'utility',
+    type: 'instant',
+    cooldown: 10,
     data: new SlashCommandBuilder()
         .setName('hex')
         .setDescription('Find the binary equivalent of a hexadecimal number!')
@@ -13,8 +16,6 @@ module.exports = {
                 .setDescription('The hexadecimal number to convert')
                 .setMaxLength((Number.MAX_SAFE_INTEGER.toString(16)).length)
         ),
-    category: 'utility',
-    cooldown: 10,
     async execute(interaction) {
         if (!hex_test.test(interaction.options.getString('number'))) {
             return await interaction.reply('Not a valid hexadecimal number!');
